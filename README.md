@@ -74,7 +74,7 @@ The code on this page is for checking the operation of the `cssInterop` function
 
 It should be as follows.
 
-<img width="320" alt="image" src="https://github.com/user-attachments/assets/84bd5075-bbe4-4b71-8dc9-f6ed85178963">
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/fbade75c-702b-425e-b3c0-0f73cbbd8b73">
 
 ## Type-D
 
