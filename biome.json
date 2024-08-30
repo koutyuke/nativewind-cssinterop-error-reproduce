@@ -1,0 +1,77 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.0/schema.json",
+  "files": {
+    "include": ["**/*.ts*", "**/*.*js*", "**/*.json"],
+    "ignore": ["node_modules", "dist", ".turbo", ".next", ".expo", "bin"]
+  },
+  "formatter": {
+    "formatWithErrors": false,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "asNeeded"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space"
+    },
+    "parser": {
+      "allowComments": true
+    }
+  },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noUselessConstructor": "off",
+        "noUselessFragments": "error",
+        "useArrowFunction": "error",
+        "noForEach": "off"
+      },
+      "style": {
+        "noDefaultExport": "error",
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noConsoleLog": "warn"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["tv", "twMerge", "twPseudo", "twColorPalette"]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": [
+        "**/*.story.*",
+        "**/*.config.*",
+        "**/.storybook/**",
+        "**/src/app/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    }
+  ],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
+}
