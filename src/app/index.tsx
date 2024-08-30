@@ -1,10 +1,22 @@
+import { Link } from "expo-router";
 import type { FC } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 const Home: FC = () => {
 	return (
-		<View className="flex h-full items-center justify-center">
-			<Text className="text-red-500">Home</Text>
+		<View className="flex h-full flex-col items-center justify-center gap-4">
+			<Link href="/type-a" className="text-blue-500 text-xl">
+				Type-A
+			</Link>
+			<Link href="/type-b" className="text-blue-500 text-xl">
+				Type-B
+			</Link>
+			<Link href="/type-c" className="text-blue-500 text-xl">
+				Type-C
+			</Link>
+			<Link href="/type-d" className="text-blue-500 text-xl">
+				Type-D
+			</Link>
 		</View>
 	);
 };

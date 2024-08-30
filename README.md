@@ -1,50 +1,230 @@
-# Welcome to your Expo app 👋
+# cssinterop-error-reproduce
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a repository for reproducing errors in nativewind's cssinterop.
 
-## Get started
+[Issue - [4.1 BUG] CssInterop Throw Error "TypeError: right operand of 'in' is not an object" AND Fix PR Question(#1012)](https://github.com/nativewind/nativewind/issues/1012)
 
-1. Install dependencies
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/656f9a97-607b-4836-8321-113cf14eaa3c">
 
-   ```bash
-   npm install
-   ```
+# Environment
 
-2. Start the app
+node - v22.7.0
 
-   ```bash
-    npx expo start
-   ```
+pnpm - v9.9.0
 
-In the output, you'll find options to open the app in a
+nativewind - v4.1.1
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+react-native-css-interop - v0.1.1
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+macOS - 14.6.1（23G93）
 
-## Get a fresh project
+Simulator - iPhone 15 Pro (iOS 17.5)
 
-When you're ready, run:
+AND Expo Go App
 
-```bash
-npm run reset-project
+# Set up
+
+```sh
+# install
+> pnpm i
+
+# start
+> pnpm run ios -c
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# Pages
 
-## Learn more
+## Home
 
-To learn more about developing your project with Expo, look at the following resources:
+Links to each page are placed.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Type-A
 
-## Join the community
+🟢 It's not an error.
 
-Join our community of developers creating universal apps.
+The code on this page is for checking the operation of CssInterop, which is executed by default.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+It should be as follows.
+
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/84bd5075-bbe4-4b71-8dc9-f6ed85178963">
+
+## Type-B
+
+🟥 Sometimes it is an error, sometimes it is not.
+
+The code on this page passes a value to the `placeholderClassName` that causes the error.
+
+However, sometimes it is not an error.
+
+This may be due to internal caching or memoization of `cssInterop` function processing.
+
+But there is no way to clear this (maybe I just don't know).
+
+So if the error does not appear the first time, it will probably never appear after that.
+
+(If you look at the screen, you can see that the text color of the placeHolder has not changed. This means that the `cssInterop` function is not being processed correctly).
+
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/656f9a97-607b-4836-8321-113cf14eaa3c">
+
+## Type-C
+
+🟢 It's not an error.
+
+The code on this page is for checking the operation of the `cssInterop` function.
+
+It should be as follows.
+
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/84bd5075-bbe4-4b71-8dc9-f6ed85178963">
+
+## Type-D
+
+🟥 Sometimes it is an error, sometimes it is not.
+
+The code on this page passes a value to the `placeholderClassName` that causes the error
+
+Sometimes it is an error, sometimes it is no
+This may be due to internal caching or memoization of `cssInterop` function processing.
+
+Unlike Type-B, cssInterop is declared her so it would be possible to reproduce it without error. The procedure is described below.
+
+### 1. Run the app
+
+Without changing anything in the code, execute the following command to transition from the top page to this page.
+
+```
+pnpm run ios -c
+```
+
+If cache, etc., does not work, an error occurs here.
+
+If no error occurs, go to the next process.
+
+### 2. Rerun the app with the comment out of the `cssInterop` function.
+
+Stop the expo that was started in step 1.
+
+Then comment out the cssInterop lines (5~18) and run it again.
+
+(Clear the cache.)
+
+```ts
+import { cssInterop } from "nativewind";
+import type { FC } from "react";
+import { TextInput, View } from "react-native";
+
+// cssInterop(TextInput, {
+// 	className: {
+// 		target: "style",
+// 		nativeStyleToProp: {
+// 			textAlign: true,
+// 		},
+// 	},
+// 	placeholderClassName: {
+// 		target: false,
+// 		nativeStyleToProp: {
+// 			color: "placeholderTextColor",
+// 		},
+// 	},
+// });
+
+const Home: FC = () => {
+	...
+};
+
+export default Home;
+
+```
+
+```
+pnpm run ios -c
+```
+
+Then open the "type-d" page again.
+
+(There probably won't be any errors here either.)
+
+### 3. Undo the comment-out and run again.
+
+Stop the expo that was started in step 2.
+
+Remove the comment-outs made in step 2 and run the application again.
+(Clear the cache.)
+
+```ts
+import { cssInterop } from "nativewind";
+import type { FC } from "react";
+import { TextInput, View } from "react-native";
+
+cssInterop(TextInput, {
+	className: {
+		target: "style",
+		nativeStyleToProp: {
+			textAlign: true,
+		},
+	},
+	placeholderClassName: {
+		target: false,
+		nativeStyleToProp: {
+			color: "placeholderTextColor",
+		},
+	},
+});
+
+const Home: FC = () => {
+	...
+};
+
+export default Home;
+
+```
+
+```
+pnpm run ios -c
+```
+
+Then open the "type-d" page again. An error will occur her.
+
+(If you don't see an error, try the above steps again.)
+
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/656f9a97-607b-4836-8321-113cf14eaa3c">
+
+# About This Error
+
+This error occurs when the class is passed to Props where the vlaue target of the Object passed as the second argument of CssInterop is false (boolean).
+
+The cause is omitted.
+
+Taking Type-D as an example, passing a class to a `className` with `style` in target does not cause an error, but passing a class to a `placeholderClassName` with `false` in target causes an error.
+
+```ts
+// type-d.tsx
+
+cssInterop(TextInput, {
+  className: {
+    target: "style", // Not the cause.
+    nativeStyleToProp: {
+      textAlign: true,
+    },
+  },
+  placeholderClassName: {
+    target: false, // Cause of Error
+    nativeStyleToProp: {
+      color: "placeholderTextColor",
+    },
+  },
+});
+
+const Home: FC = () => {
+  return (
+    <View className="flex h-full items-center justify-center">
+      <TextInput
+        placeholder="type-D"
+        className="w-1/2 bg-red-100 text-center text-xl"
+        placeholderClassName="text-black" // Error...
+      />
+    </View>
+  );
+};
+
+export default Home;
+```

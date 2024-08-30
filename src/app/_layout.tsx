@@ -25,6 +25,10 @@ export default function RootLayout() {
 	return (
 		<Stack>
 			<Stack.Screen name="index" />
+			<Stack.Screen name="type-a" />
+			<Stack.Screen name="type-b" />
+			<Stack.Screen name="type-c" />
+			<Stack.Screen name="type-d" />
 		</Stack>
 	);
 }
